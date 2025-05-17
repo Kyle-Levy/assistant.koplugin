@@ -104,6 +104,7 @@ function Assistant:init()
 end
 
 function Assistant:onDictButtonsReady(dict_popup, buttons)
+  -- Add the "Dictionary (AI)" button if enabled in the configuration
   if CONFIGURATION and CONFIGURATION.features and CONFIGURATION.features.show_dictionary_button_in_dictionary_popup then
     table.insert(buttons, 1, {{
         id = "assistant_dictionary",
@@ -114,6 +115,21 @@ function Assistant:onDictButtonsReady(dict_popup, buttons)
                 local showDictionaryDialog = require("dictdialog")
                 -- Pass the word from the dict_popup instead of the highlight instance:
                 showDictionaryDialog(self.ui, dict_popup.lookupword)
+            end)
+        end,
+    }})
+  end
+
+  -- Add the "Pronunciation" button if the prompt is defined in the configuration
+  if CONFIGURATION and CONFIGURATION.features and CONFIGURATION.features.prompts and CONFIGURATION.features.prompts.pronunciation then
+    local pronunciation_prompt = CONFIGURATION.features.prompts.pronunciation
+    table.insert(buttons, 2, {{
+        id = "assistant_pronunciation",
+        text = (pronunciation_prompt.text or _("Pronunciation")) .. " (AI)",
+        font_bold = false,
+        callback = function()
+            NetworkMgr:runWhenOnline(function()
+                showChatGPTDialog(self.ui, dict_popup.lookupword, "pronunciation")
             end)
         end,
     }})
