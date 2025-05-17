@@ -28,7 +28,10 @@ local provider_handlers = {
     deepseek = function() loadHandler("deepseek") end,
     gemini = function() loadHandler("gemini") end,
     openrouter = function() loadHandler("openrouter") end,
-    ollama = function() loadHandler("ollama") end
+    ollama = function() loadHandler("ollama") end,
+    mistral = function() loadHandler("mistral") end,
+    groq = function() loadHandler("groq") end,
+    azure_openai = function() loadHandler("azure_openai") end
 }
 
 if CONFIGURATION and CONFIGURATION.provider and provider_handlers[CONFIGURATION.provider] then

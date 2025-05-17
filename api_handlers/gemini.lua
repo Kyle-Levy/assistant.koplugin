@@ -73,7 +73,7 @@ function GeminiHandler:makeRequest(url, headers, body)
         verify = "none", -- Disable SSL verification for Kindle
     })
     
-    logger.warn("HTTPS request details:", {
+    logger.dbg("HTTPS request details:", {
         success = success,
         code = code,
         response_headers = headers_response,

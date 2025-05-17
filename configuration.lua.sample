@@ -1,5 +1,5 @@
 local CONFIGURATION = {
-    -- Choose your preferred AI provider: "anthropic", "openai", "gemini", "openrouter", "deepseek" or "ollama"
+    -- Choose your preferred AI provider: "anthropic", "openai", "gemini", "openrouter", "deepseek", "ollama", "mistral" or "azure_openai"
     provider = "openai",
 
     -- Provider-specific settings
@@ -55,6 +55,29 @@ local CONFIGURATION = {
             api_key = "ollama",
             additional_parameters = { }
         },
+        mistral = {
+            model = "mistral-small-latest", -- model list: https://docs.mistral.ai/getting-started/models/models_overview/
+            base_url = "https://api.mistral.ai/v1/chat/completions",
+            api_key = "your-mistral-api-key",
+            additional_parameters = {
+                temperature = 0.7,
+                max_tokens = 4096
+            }
+        },
+        groq = {
+            model = "llama-3.3-70b-versatile", -- model list: https://console.groq.com/docs/models
+            base_url = "https://api.groq.com/openai/v1/chat/completions",
+            api_key = "your-groq-api-key",
+            additional_parameters = { }
+        },
+        azure_openai = {
+            endpoint = "https://your-resource-name.openai.azure.com", -- Your Azure OpenAI resource endpoint
+            deployment_name = "your-deployment-name", -- Your model deployment name
+            api_version = "2024-02-15-preview", -- Azure OpenAI API version
+            api_key = "your-azure-api-key", -- Your Azure OpenAI API key
+            temperature = 0.7,
+            max_tokens = 4096
+        },
     },
 
     -- Optional features, replace each "Turkish" with your desired language
@@ -68,6 +91,7 @@ local CONFIGURATION = {
         show_dictionary_button_in_main_popup = true, -- Set to true to show the dictionary button in the main popup
         dictionary_translate_to = "tr-TR", -- Set to the desired language code for the dictionary, nil to hide it
         show_dictionary_button_in_dictionary_popup = true, -- Set to true to show the Dictionary (AI) button in the dictionary popup
+        enable_AI_recap = true, -- Set to true to allow for a popup on a book you haven't read in a while to give you a quick AI recap
 
         -- Custom prompts for the AI (text = button text in the UI). system-prompt defaults to "You are a helpful assistant." if not set.
         --You can use {author} and {title} variables in the user_prompt,

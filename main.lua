@@ -63,6 +63,54 @@ function Assistant:init()
       }
     end)
   end
+  
+  -- Recap Feature
+  if CONFIGURATION and CONFIGURATION.features and CONFIGURATION.features.enable_AI_recap then
+    local ReaderUI    = require("apps/reader/readerui")
+    local ConfirmBox  = require("ui/widget/confirmbox")
+    local UIManager   = require("ui/uimanager")
+    local T 		      = require("ffi/util").template
+    local lfs         = require("libs/libkoreader-lfs")   -- for file attributes
+    local DocSettings = require("docsettings")			      -- for document progress
+  
+    -- Save a reference to the original doShowReader method.
+    local original_doShowReader = ReaderUI.doShowReader
+  
+    -- Override the ReaderUI:doShowReader method.
+    function ReaderUI:doShowReader(file, provider, seamless)
+      -- Get file metadata; here we use the file's "access" attribute.
+      local attr = lfs.attributes(file)
+      local lastAccess = attr and attr.access or nil
+  
+      if lastAccess and lastAccess > 0 then -- Has been opened
+        local doc_settings = DocSettings:open(file)
+        local percent_finished = doc_settings:readSetting("percent_finished")
+        local timeDiffHours = (os.time() - lastAccess) / 3600.0
+  
+        if timeDiffHours >= 28 and percent_finished <= 0.95 then -- More than 28hrs since last open and less than 95% complete
+          -- Construct the message to display.
+          local doc_props = doc_settings:child("doc_props")
+          local title = doc_props:readSetting("title", "Unknown Title")
+          local authors = doc_props:readSetting("authors", "Unknown Author")
+          local message = string.format(_("Do you want an AI Recap?\nFor %s by %s.\nLast read %.0f hours ago."), title, authors, timeDiffHours) -- can add in percent_finished too
+  
+          -- Display the request popup using ConfirmBox.
+          UIManager:show(ConfirmBox:new{
+            text            = T(_(message)),
+            ok_text         = _("Yes"),
+            ok_callback     = function()
+              NetworkMgr:runWhenOnline(function()
+                local showRecapDialog = require("recapdialog")
+                showRecapDialog(self.ui, title, authors, percent_finished)
+              end)
+            end,
+            cancel_text     = _("No"),
+          })
+        end
+      end
+      original_doShowReader(self, file, provider, seamless)
+    end
+  end
 
   -- Add Custom buttons (ones with show_on_main_popup = true)
   if CONFIGURATION and CONFIGURATION.features and CONFIGURATION.features.prompts then

@@ -15,7 +15,8 @@ A powerful plugin that lets you interact with AI language models (Claude, GPT-4,
   - DeepSeek (not tested)
   - Ollama
 - **Builtin Prompts**:
-  - **Dictionary** : Get synonyms, context-aware dictionary explanation and example for the selected word. (thanks to [plateaukao](https://github.com/plateaukao/AskGP))
+  - **Dictionary** : Get synonyms, context-aware dictionary explanation and example for the selected word. (thanks to [plateaukao](https://github.com/plateaukao))
+  - **Recap** : Get a quick recap of a book when you open it, for books that haven't been opened in 28 hrs and <95% complete. (thanks to [jbhul](https://github.com/jbhul))
 - **Custom Prompts**: Create your own specialized AI helpers with their own quick actions and prompts
   - **Translation**: Instantly translate highlighted text to any language
   - **Quick Actions**: One-click buttons for common tasks like summarizing or explaining
